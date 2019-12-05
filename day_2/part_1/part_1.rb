@@ -12,24 +12,30 @@ class IntcodeComputer
     output[0]
   end
 
-  def call(position: 0)
+  def read_value_from_position(position)
+    output[output[position]]
+  end
+
+  def write_value_to_position(position, value)
+    output[output[position]] = value
+  end
+
+  def call(pointer: 0)
     loop do
-      instruction = output[position]
+      instruction = output[pointer]
 
       case instruction
       when 1
-        value = output[output[position + 1]] + output[output[position + 2]]
-        write_to = output[position + 3]
-        output[write_to] = value
+        value = read_value_from_position(pointer + 1) + read_value_from_position(pointer + 2)
+        write_value_to_position(pointer + 3, value)
       when 2
-        value = output[output[position + 1]] * output[output[position + 2]]
-        write_to = output[position + 3]
-        output[write_to] = value
+        value = read_value_from_position(pointer + 1) * read_value_from_position(pointer + 2)
+        write_value_to_position(pointer + 3, value)
       when 99
         return output
       end
 
-      position += 4
+      pointer += 4
     end
   end
 
